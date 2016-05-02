@@ -17,16 +17,5 @@ module.exports = {
       // Successful authentication, redirect home.
       res.goTo('/');
     });
-
-    // req.we.passport
-    // .authenticate('google', { failureRedirect: '/login' })(req, res, function (err) {
-    //   if (err) {
-    //     req.we.log.error('we-plugin-passport-google: Error on authenticate with google.strategy:', err);
-    //     res.addMessage('error', 'auth.oauth.error');
-    //   }
-
-    //   // Successful authentication, redirect home.
-    //   res.goTo('/');
-    // });
   }
 }
