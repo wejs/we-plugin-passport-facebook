@@ -5,7 +5,7 @@
 ## How to install
 
 ```sh
-npm install we-plugin-passport-facebook --save
+we i we-plugin-passport-facebook
 ```
 
 ## How to configure

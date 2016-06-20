@@ -1,25 +1,21 @@
 {
   "name": "we-plugin-passport-facebook",
   "description": "We.js facebook authentication plugin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "plugin.js",
-  "scripts": {},
   "dependencies": {
     "passport-facebook": "^2.1.0"
   },
-  "devDependencies": {},
   "author": "Alberto Souza <contato@albertosouza.net>",
   "keywords": [
-    "we.js",
-    "wejs",
-    "plugin",
-    "oauth",
-    "facebook",
-    "passport"
+    "wejs-plugin"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:wejs/we-plugin-passport-facebook.git"
-  },
-  "license": "MIT"
+  "repository": "wejs/we-plugin-passport-facebook",
+  "license": "MIT",
+  "wejs": {
+    "dependencies": {
+      "we-plugin-auth": true,
+      "we-plugin-user": true
+    }
+  }
 }
