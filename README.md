@@ -25,7 +25,7 @@ To configure in your project update the file: `config/locals.js` :
       facebook: {
         clientID: 'facebook api client id',
         clientSecret: 'facebook api client secret',
-        // callbackURL: 'a custom callback url' // optional
+        // callbackURL: 'a custom callback url' // optional, if set an root url add / in end ot it
       }
     }
   },
