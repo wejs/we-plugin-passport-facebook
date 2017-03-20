@@ -1,10 +1,10 @@
 /**
- * Main file for facebook authentitation plugin
+ * Main facebook authentitation plugin file
  *
  * see http://wejs.org/docs/we/plugin
  */
 module.exports = function loadPlugin(projectPath, Plugin) {
-  var plugin = new Plugin(__dirname);
+  const plugin = new Plugin(__dirname);
 
   // set plugin configs
   plugin.setConfigs({
@@ -24,15 +24,15 @@ module.exports = function loadPlugin(projectPath, Plugin) {
           callbackURL: null,
           profileFields: ['id', 'displayName', 'photos', 'email'],
           session: true,
-          findUser: function findUser(token, tokenSecret, profile, done) {
+          findUser(token, tokenSecret, profile, done) {
             // // log profile data
             // console.log('>>profile>>', profile);
 
-            var we = this.we;
+            const we = this.we;
             // get email
-            var email = profile.emails[0].value;
+            const email = profile.emails[0].value;
 
-            var query = {
+            const query = {
               where: { email: email },
               defaults: {
                 displayName: profile.displayName,
@@ -44,13 +44,16 @@ module.exports = function loadPlugin(projectPath, Plugin) {
               }
             };
 
-            we.db.models.user.findOrCreate(query)
-            .spread(function afterCreateUserFromFacebook(user, created) {
+            we.db.models.user
+            .findOrCreate(query)
+            .spread( (user, created)=> {
               if (created) we.log.info('New user from facebook', user.id);
               // TODO download and save user picture from facebook API
 
-              return done(null, user);
-            }).catch(done);
+              done(null, user);
+              return null;
+            })
+            .catch(done);
           }
         }
       }
@@ -71,16 +74,16 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   });
 
   // use the bootstrap evento to set default auth callback
-  plugin.events.on('we:after:load:express', function(we) {
+  plugin.events.on('we:after:load:express', (we)=> {
     if (
       we.config.passport &&
       we.config.passport.strategies &&
       we.config.passport.strategies.facebook &&
       !we.config.passport.strategies.facebook.callbackURL
     ) {
-      we.config.passport.strategies.facebook.callbackURL = we.config.hostname+'/auth/facebook/callback'
+      we.config.passport.strategies.facebook.callbackURL = we.config.hostname+'/auth/facebook/callback';
     }
-  })
+  });
 
   return plugin;
 };
