@@ -30,6 +30,12 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
             const we = this.we;
             // get email
+            //
+            if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
+              done('passport-facebook.callback.email.no.tavaible');
+              return null;
+            }
+
             const email = profile.emails[0].value;
 
             const query = {
