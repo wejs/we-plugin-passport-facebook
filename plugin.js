@@ -79,6 +79,15 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     }
   });
 
+  plugin.hooks.on('system-settings:started', (we, done)=> {
+    if (we.systemSettings.fbclientSecret && we.systemSettings.fbClientId) {
+      we.config.passport.strategies.facebook.clientID = we.systemSettings.fbClientId;
+      we.config.passport.strategies.facebook.clientSecret = we.systemSettings.fbclientSecret;
+    }
+
+    done();
+  });
+
   // use the bootstrap evento to set default auth callback
   plugin.events.on('we:after:load:express', (we)=> {
     if (
