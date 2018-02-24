@@ -65,3 +65,7 @@ Default callback url:
 ## License
 
 Under [the MIT license](https://github.com/wejs/we/blob/master/LICENSE.md).
+
+## Sponsored by
+
+- Linky Systems: https://linkysystems.com
