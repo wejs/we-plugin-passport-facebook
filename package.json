@@ -1,7 +1,7 @@
 {
   "name": "we-plugin-passport-facebook",
   "description": "We.js facebook authentication plugin",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "plugin.js",
   "dependencies": {
     "passport-facebook": "^2.1.1"
