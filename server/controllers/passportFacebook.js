@@ -1,10 +1,9 @@
 module.exports = {
   page(req, res, next) {
-    req.we.passport.authenticate('facebook',{
-      scope: [
-        'email'
-      ]
-    })(req, res, next);
+    req.we.passport.authenticate(
+      'facebook',
+      (req.we.config.passport.strategies.facebook.scope || ['email'])
+    )(req, res, next);
   },
   callback(req, res) {
     req.we.passport

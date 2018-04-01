@@ -19,20 +19,18 @@ module.exports = function loadPlugin(projectPath, Plugin) {
           // for docs see https://github.com/jaredhanson/passport-facebook
           clientID: null,
           clientSecret: null,
+          scope: null,
           // callbackURL is automaticaly set to we.config.hostname+'/auth/google/callback'
           // but you can change it in config/local.js
           callbackURL: null,
           profileFields: ['id', 'displayName', 'photos', 'email'],
           session: true,
-          findUser(token, tokenSecret, profile, done) {
-            // // log profile data
-            // console.log('>>profile>>', profile);
-
+          findUser(accessToken, refreshToken, profile, done) {
             const we = this.we;
             // get email
             //
             if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
-              done('passport-facebook.callback.email.no.tavaible');
+              done('passport-facebook.callback.email.not.avaible');
               return null;
             }
 
@@ -56,10 +54,16 @@ module.exports = function loadPlugin(projectPath, Plugin) {
               if (created) we.log.info('New user from facebook', user.id);
               // TODO download and save user picture from facebook API
 
+              user.accessToken = accessToken;
+              user.refreshToken = refreshToken;
+
               done(null, user);
               return null;
             })
-            .catch(done);
+            .catch( (err)=> {
+              done(err, null);
+              return null;
+            });
           }
         }
       }
