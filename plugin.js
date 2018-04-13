@@ -27,8 +27,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
           session: true,
           findUser(accessToken, refreshToken, profile, done) {
             const we = this.we;
-            // get email
-            //
+            // get email:
             if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
               done('passport-facebook.callback.email.not.avaible');
               return null;
@@ -44,18 +43,42 @@ module.exports = function loadPlugin(projectPath, Plugin) {
                 acceptTerms: true,
                 active: true,
                 email: email,
-                confirmEmail: email
+                confirmEmail: email,
+                facebookId: profile.id
               }
             };
 
             we.db.models.user
             .findOrCreate(query)
             .spread( (user, created)=> {
-              if (created) we.log.info('New user from facebook', user.id);
+              if (created) {
+                we.log.info('New user from facebook', user.id);
+                // new user, is active by default...
+              } else if(!user.active) {
+                // need email validation
+                we.log.info('FB:User inactive trying to login:', user.id);
+                done('user.inactive.cant.login', null);
+                return null;
+              } else if(user.blocked) {
+                we.log.info('FB:User blocked trying to login:', user.id);
+                done('user.blocked.cant.login', null);
+                return null;
+              }
+
+
               // TODO download and save user picture from facebook API
 
               user.accessToken = accessToken;
               user.refreshToken = refreshToken;
+
+              if (!user.facebookId) {
+                user.facebookId = profile.id;
+                return user.save()
+                .then( ()=> {
+                  done(null, user);
+                  return null;
+                });
+              }
 
               done(null, user);
               return null;
