@@ -3,6 +3,7 @@
  *
  * see http://wejs.org/docs/we/plugin
  */
+
 module.exports = function loadPlugin(projectPath, Plugin) {
   const plugin = new Plugin(__dirname);
 
@@ -27,6 +28,9 @@ module.exports = function loadPlugin(projectPath, Plugin) {
           session: true,
           findUser(accessToken, refreshToken, profile, done) {
             const we = this.we;
+
+            we.log.verbose('facebook-auth:data:', profile);
+
             // get email:
             if (!profile || !profile.emails || !profile.emails[0] || !profile.emails[0].value) {
               done('passport-facebook.callback.email.not.avaible');
@@ -54,34 +58,26 @@ module.exports = function loadPlugin(projectPath, Plugin) {
               if (created) {
                 we.log.info('New user from facebook', user.id);
                 // new user, is active by default...
-              } else if(!user.active) {
-                // need email validation
-                we.log.info('FB:User inactive trying to login:', user.id);
-                done('user.inactive.cant.login', null);
-                return null;
               } else if(user.blocked) {
                 we.log.info('FB:User blocked trying to login:', user.id);
                 done('user.blocked.cant.login', null);
                 return null;
               }
 
+              if(!user.active) user.active = true;
 
-              // TODO download and save user picture from facebook API
+              plugin.getUserAvatar(profile.id, user, we, ()=> {
+                user.accessToken = accessToken;
+                user.refreshToken = refreshToken;
 
-              user.accessToken = accessToken;
-              user.refreshToken = refreshToken;
+                if (!user.facebookId) user.facebookId = profile.id;
 
-              if (!user.facebookId) {
-                user.facebookId = profile.id;
                 return user.save()
                 .then( ()=> {
                   done(null, user);
                   return null;
                 });
-              }
-
-              done(null, user);
-              return null;
+              });
             })
             .catch( (err)=> {
               done(err, null);
@@ -126,6 +122,41 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       we.config.passport.strategies.facebook.callbackURL = we.config.hostname+'/auth/facebook/callback';
     }
   });
+
+  plugin.getUserAvatar = function (facebookId, user, we, cb) {
+    if (user.avatar && user.avatar.length) {
+      return cb();
+    }
+
+    // get user picture from facebook ...
+
+    // url: urlurlhttps://graph.facebook.com/v2.12/100026878071543/picture?width=320&height=320
+
+    const plf = we.plugins['we-plugin-file-local'];
+    if (!plf) return cb();
+
+    if (user && user.avatar && user.avatar.length) return cb();
+
+    if (!facebookId) return cb();
+
+    const uU = plf.urlUploader;
+    const url = 'https://graph.facebook.com/v2.12/'+facebookId+'/picture?width=320&height=320';
+
+    uU.uploadFromUrl(url, we, (err, image)=> {
+      if (err) return cb(err);
+      image.setCreator(user.id)
+      .then( ()=> {
+        user.avatar = [image];
+        return user.save();
+      })
+      .then( ()=> {
+        we.log.verbose('new image:', image.get());
+        cb(null, image);
+        return null;
+      });
+    });
+
+  };
 
   return plugin;
 };
