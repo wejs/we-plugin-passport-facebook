@@ -57,6 +57,18 @@ Default callback url:
 }
 ```
 
+#### Authenticate with user short lived access_token:
+
+Usefull for apps:
+
+```js
+'post /auth/facebook/app-login': {
+  controller    : 'passportFacebook',
+  action        : 'APPloginWithFacebookAccessToken',
+  responseType  : 'json'
+}
+```
+
 ## Links
 
 > * We.js site: http://wejs.org
