@@ -3,9 +3,32 @@
   "description": "We.js facebook authentication plugin",
   "version": "1.4.0",
   "main": "plugin.js",
+  "scripts": {
+    "test": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b ",
+    "verbose-test": "NODE_ENV=test LOG_LV=verbose ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b ",
+    "coverage": "NODE_ENV=test LOG_LV=info node_modules/.bin/istanbul cover -x src node_modules/.bin/_mocha -- -u exports -R spec test/bootstrap.js test/**/*.test.js"
+  },
   "dependencies": {
-    "passport-facebook": "^2.1.1",
-    "request": "^2.87.0"
+    "passport-facebook": "^3.0.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "chance": "^1.0.18",
+    "connect-sqlite3": "^0.9.11",
+    "istanbul": "0.4.5",
+    "mocha": "5.2.0",
+    "rimraf": "^2.6.3",
+    "sinon": "7.2.3",
+    "supertest": "3.4.2",
+    "we-core": "^2.0.11",
+    "we-passport-oauth2-password": "^2.0.0",
+    "we-plugin-acl": "^1.2.13",
+    "we-plugin-auth": "^2.3.1",
+    "we-plugin-user": "^2.0.1",
+    "we-test-tools": "wejs/we-test-tools#0.3.21"
+  },
+  "engines": {
+    "node": ">=6.0.0"
   },
   "author": "Alberto Souza <contato@albertosouza.net>",
   "keywords": [
@@ -14,6 +37,12 @@
   "repository": "wejs/we-plugin-passport-facebook",
   "license": "MIT",
   "wejs": {
+    "plugins": {
+      "we-plugin-auth": true,
+      "we-plugin-user": true,
+      "we-passport-oauth2-password": true,
+      "we-plugin-acl": true
+    },
     "dependencies": {
       "we-plugin-auth": true,
       "we-plugin-user": true

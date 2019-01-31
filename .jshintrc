@@ -17,13 +17,12 @@
   "laxcomma": true,
   "maxcomplexity": 20,
   "maxdepth": 4,
-  "maxstatements": 30,
   "maxlen": 120,
+  "maxstatements": 30,
   "newcap": true,
   "node": true,
   "noempty": false,
   "nonew": true,
-  "quotmark": "single",
   "predef": [
     "describe",
     "it",
@@ -32,6 +31,7 @@
     "after",
     "afterEach"
   ],
+  "quotmark": "single",
   "smarttabs": true,
   "strict": false,
   "trailing": false,

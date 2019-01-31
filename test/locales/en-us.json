@@ -1,0 +1,8 @@
+{
+	"response.serveError.title": "response.serveError.title",
+	"fbGetRefreshToen:facebook appId and appSecret is required": "fbGetRefreshToen:facebook appId and appSecret is required",
+	"email.not.found.in.facebook.response": "email.not.found.in.facebook.response",
+	"response.notFound.title": "response.notFound.title",
+	"FBRTResult.access_token is required": "FBRTResult.access_token is required",
+	"Error validating access token: Session has expired on Wednesday, 30-Jan-19 18:00:00 PST. The current time is Wednesday, 30-Jan-19 18:02:48 PST.": "Error validating access token: Session has expired on Wednesday, 30-Jan-19 18:00:00 PST. The current time is Wednesday, 30-Jan-19 18:02:48 PST."
+}
