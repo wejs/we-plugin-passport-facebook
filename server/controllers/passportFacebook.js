@@ -83,7 +83,13 @@ module.exports = {
             return done('passportFacebook:Error on request data from facebook');
           }
 
-          log.verbose('fBGetData:', data);
+          if (data.error) {
+            log.error('passportFacebook:API error on request data from facebook', {
+              err: err,
+              data: data
+            });
+            return done('passportFacebook:API error on request data from facebook');
+          }
 
           if (!data.email) {
             return done('email.not.found.in.facebook.response');
