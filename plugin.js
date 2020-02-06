@@ -25,6 +25,8 @@ module.exports = function loadPlugin(projectPath, Plugin) {
           clientSecret: null,
           scope: null,
           redirectUrlAfterSuccess: '/',
+          redirectUrlAfterFailure: '/login',
+
           // callbackURL is automaticaly set to we.config.hostname+'/auth/google/callback'
           // but you can change it in config/local.js
           callbackURL: null,
@@ -108,7 +110,6 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       .then( ()=> {
         we.log.verbose('new image:', image.get());
         cb(null, image);
-        return null;
       });
     });
 

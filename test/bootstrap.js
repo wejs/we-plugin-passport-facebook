@@ -11,7 +11,7 @@ process.env.FB_TEST_PASSWORD = 'aosjdjj89au8912sa';
 process.env.ACCESS_TOKEN = 'EAAEAYPEi0fYBAD3f5jWIs0JljElh4akQEysv7IVcAyPK8g0KpmPOxE5QYOcmLlBFEM1f3mHbni38XD61zz0bjNeLCa6FelZBj5op8ZClVTimhcWaDMGCeHK1btN5JcgfXcMPsiQGh55U9J7VaI7lvny31gwoDFzOGp5sEJbd6JeVpTnfZA0a1hxkfF89D8hbQIpZCD2ZCXo4NfwujTvmJPFhF57Ojo5PtiNJMGTbCZCibE9kQM6ryI';
 
 before(function(callback) {
-  testTools.copyLocalSQLiteConfigIfNotExitst(projectPath, callback);
+  testTools.copyLocalSQLiteConfigIfNotExists(projectPath, callback);
 });
 
 before(function(callback) {
@@ -47,13 +47,6 @@ before(function(callback) {
         }
       }
     },
-    session: getSessionConfigs(),
-    database: {
-      test: {
-        dialect: 'sqlite',
-        storage: path.join(projectPath, 'database.sqlite')
-      }
-    },
     i18n: {
       directory: path.join(__dirname, 'locales'),
       updateFiles: true
@@ -78,7 +71,6 @@ after(function (callback) {
       path.join(projectPath + 'files', 'config'),
       path.join(projectPath, 'database.sqlite'),
       path.join(projectPath, 'sessionsDB'),
-      path.join(projectPath, 'files', 'sqlite')
     ];
 
     we.utils.async.each(tempFolders, (folder, next)=> {
@@ -90,25 +82,3 @@ after(function (callback) {
 after(function () {
   we.exit(process.exit);
 });
-
-
-function getSessionConfigs() {
-  const session = require('express-session');
-  const SQLiteStore = require('connect-sqlite3')(session);
-  const configs = {};
-
-  // change host and port to your redis cfgs:
-
-  configs.session = {
-    secret: '12345678910',
-    store: new SQLiteStore({
-      table: 's_session',
-      db: 'sessionsDB',
-      dir: projectPath
-    }),
-    resave: false, // don't save session if unmodified
-    saveUninitialized: false
-  };
-
-  return configs.session;
-}

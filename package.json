@@ -4,28 +4,29 @@
   "version": "1.5.1",
   "main": "plugin.js",
   "scripts": {
-    "test": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b ",
-    "verbose-test": "NODE_ENV=test LOG_LV=verbose ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b ",
-    "coverage": "NODE_ENV=test LOG_LV=info node_modules/.bin/istanbul cover -x src node_modules/.bin/_mocha -- -u exports -R spec test/bootstrap.js test/**/*.test.js"
+    "test": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js",
+    "coverage": "NODE_ENV=test LOG_LV=info nyc ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js -b"
   },
   "dependencies": {
     "passport-facebook": "^3.0.0",
     "request": "^2.88.0"
   },
   "devDependencies": {
-    "chance": "^1.0.18",
+    "fs-extra": "^8.1.0",
+    "nyc": "^15.0.0",
+    "sqlite3": "^4.1.1",
+    "chance": "^1.1.4",
     "connect-sqlite3": "^0.9.11",
-    "istanbul": "0.4.5",
-    "mocha": "5.2.0",
-    "rimraf": "^2.6.3",
-    "sinon": "7.2.3",
-    "supertest": "3.4.2",
-    "we-core": "^2.0.11",
-    "we-passport-oauth2-password": "^2.0.1",
-    "we-plugin-acl": "^1.2.13",
-    "we-plugin-auth": "^2.3.1",
-    "we-plugin-user": "^2.0.1",
-    "we-test-tools": "wejs/we-test-tools#0.3.21"
+    "mocha": "7.0.1",
+    "rimraf": "^3.0.1",
+    "sinon": "8.1.1",
+    "supertest": "4.0.2",
+    "we-core": "^3.1.8",
+    "we-passport-oauth2-password": "^2.0.2",
+    "we-plugin-acl": "^1.2.16",
+    "we-plugin-auth": "^2.3.2",
+    "we-plugin-user": "^3.0.1",
+    "we-test-tools": "^1.0.0"
   },
   "engines": {
     "node": ">=6.0.0"

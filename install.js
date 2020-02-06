@@ -11,19 +11,16 @@ module.exports = {
         .then( ()=> {
           we.log.info('Done project update v1.3.0');
           done();
-          return null;
         })
         .catch( (err)=> {
           if (err.name == 'SequelizeDatabaseError') {
             if (err.message == `Duplicate column name 'facebookId'`) {
               // fields already exists, nothing to do:
-              done();
-              return null;
+              return done();
             }
           }
 
           done(err); // unknow error
-          return null;
         });
       }
     }];
