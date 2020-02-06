@@ -1,27 +1,29 @@
-const request = require('request');
 const FCUWFD = require('../../lib/findOrCreateUserWithFacebookData.js');
 const fBGetRefreshToken = require('../../lib/fBGetRefreshToken.js');
 const fBGetData = require('../../lib/fBGetData.js');
 
 module.exports = {
   page(req, res, next) {
+    const FBAuthConfigs = req.we.config.passport.strategies.facebook;
+
     req.we.passport.authenticate(
       'facebook',
-      (req.we.config.passport.strategies.facebook.scope || ['email'])
+      (FBAuthConfigs.scope || ['email'])
     )(req, res, next);
   },
   callback(req, res) {
+    const FBAuthConfigs = req.we.config.passport.strategies.facebook;
+
     req.we.passport.authenticate('facebook', {
-      failureRedirect: '/login'
+      failureRedirect: FBAuthConfigs.redirectUrlAfterFailure
     })(req, res, (err)=> {
       if (err) {
         req.we.log.error('we-plugin-passport-facebook: Error on authenticate with facebook.strategy:', err);
         res.addMessage('error', 'auth.strategy.facebook.error');
       }
 
-      // Successful authentication, redirect home.
-      res.goTo('/');
-      return null;
+      // Successful authentication, redirect.
+      res.goTo(FBAuthConfigs.redirectUrlAfterSuccess);
     });
   },
 

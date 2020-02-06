@@ -24,6 +24,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
           clientID: null,
           clientSecret: null,
           scope: null,
+          redirectUrlAfterSuccess: '/',
           // callbackURL is automaticaly set to we.config.hostname+'/auth/google/callback'
           // but you can change it in config/local.js
           callbackURL: null,
