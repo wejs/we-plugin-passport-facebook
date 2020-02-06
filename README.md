@@ -1,6 +1,6 @@
 # We.js facebook authentication strategy
 
-> Login with facebook in your we.js project
+Login with facebook in your we.js project
 
 ## How to install
 

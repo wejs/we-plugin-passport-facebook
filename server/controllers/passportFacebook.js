@@ -18,8 +18,11 @@ module.exports = {
       failureRedirect: FBAuthConfigs.redirectUrlAfterFailure
     })(req, res, (err)=> {
       if (err) {
-        req.we.log.error('we-plugin-passport-facebook: Error on authenticate with facebook.strategy:', err);
+        req.we.log.error('we-plugin-passport-facebook: Error on authenticate with facebook.strategy:', {
+          error: err
+        });
         res.addMessage('error', 'auth.strategy.facebook.error');
+        return res.goTo(FBAuthConfigs.redirectUrlAfterFailure);
       }
 
       // Successful authentication, redirect.
