@@ -18,17 +18,19 @@ Before using passport-facebook, you must register an application with Facebook. 
 
 To configure in your project update the file: `config/locals.js` :
 
-```js
+```
 // ...
   passport: {
     strategies: {
       facebook: {
         clientID: 'facebook api client id',
         clientSecret: 'facebook api client secret',
+        redirectUrlAfterSuccess: '/',
+        redirectUrlAfterFailure: '/login',        
         // callbackURL: 'a custom callback url' // optional, if set an root url add / in end ot it
       }
     }
-  },
+  }
 // ...
 ```
 
@@ -37,7 +39,7 @@ To configure in your project update the file: `config/locals.js` :
 #### Login with facebook url:
 
 This url will start the authentication.
-```js
+```
 'get /auth/facebook': {
   controller    : 'passportFacebook',
   action        : 'page',
@@ -49,7 +51,7 @@ This url will start the authentication.
 
 Default callback url:
 
-```js
+```
 'get /auth/facebook/callback': {
   controller    : 'passportFacebook',
   action        : 'callback',
@@ -61,7 +63,7 @@ Default callback url:
 
 Usefull for apps:
 
-```js
+```
 'post /auth/facebook/app-login': {
   controller    : 'passportFacebook',
   action        : 'APPloginWithFacebookAccessToken',
