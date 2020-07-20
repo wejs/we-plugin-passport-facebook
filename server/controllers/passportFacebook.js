@@ -1,6 +1,7 @@
 const FCUWFD = require('../../lib/findOrCreateUserWithFacebookData.js');
 const fBGetRefreshToken = require('../../lib/fBGetRefreshToken.js');
 const fBGetData = require('../../lib/fBGetData.js');
+const request = require('request');
 
 module.exports = {
   page(req, res, next) {
@@ -118,7 +119,7 @@ module.exports = {
           done();
         });
       },
-      function (done) {
+      function (FDDatane) {
         if (!user || !user.id) return done();
 
         storage.generateToken(we, user, (err, r)=>{
@@ -140,5 +141,93 @@ module.exports = {
       });
     });
 
+  },
+
+  loginWithCode(req, res) {
+    if (!req.body.code) {
+      return res.badRequest('code is required');
+    }
+
+    const we = req.we;
+
+    const storage = we
+      .plugins['we-passport-oauth2-password']
+      .storage;
+
+    const {
+      clientID, clientSecret, callbackURL
+    } = we.config.passport.strategies.facebook;
+
+    let url = 'https://graph.facebook.com/v7.0/oauth/access_token?';
+    url += 'client_id=' + clientID;
+    url += '&redirect_uri=' + (
+      req.body.redirectUri || callbackURL
+    );
+    url += '&client_secret=' + clientSecret;
+    url += '&code=' + req.body.code;
+
+    request.get({
+      url: url,
+      json: true
+    }, (err, resp, FBRTResult)=> {
+      if (err) return res.queryError(err, resp.text);
+
+      getFBDataWithPromise(we, FBRTResult, (err, FDData)=> {
+        if (err) return res.queryError(err);
+
+        FCUWFD(we, FBRTResult.access_token, null, FDData, (err, user)=> {
+          if (err) return res.queryError(err);
+
+          if (!user || !user.id) return res.badRequest('user not returned from facebook request');
+
+          storage.generateToken(we, user, (err, r)=>{
+            if (err) return res.queryError(err);
+
+            res.ok({
+              token: r,
+              user: user,
+            });
+          });
+
+        });
+      });
+    });
+
   }
 };
+
+function getFBDataWithPromise(we, FBRTResult, done) {
+  const log = we.log;
+
+  if (!FBRTResult || !FBRTResult.access_token) {
+    return done('FBRTResult.access_token is required');
+  }
+
+  fBGetData(we, FBRTResult.access_token, (err, data)=> {
+    if (err) {
+      log.error('passportFacebook:Error on request data from facebook', {
+        err: err,
+        data: data
+      });
+      return done('passportFacebook:Error on request data from facebook');
+    }
+
+    if (data.error) {
+      log.error('passportFacebook:API error on request data from facebook', {
+        err: err,
+        data: data
+      });
+      return done('passportFacebook:API error on request data from facebook');
+    }
+
+    if (!data.email) {
+      return done('email.not.found.in.facebook.response');
+    }
+
+    done(null, {
+      id: data.id,
+      emails: [{ value: data.email}],
+      displayName: data.name
+    });
+  });
+}

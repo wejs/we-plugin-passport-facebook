@@ -57,6 +57,11 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       controller    : 'passportFacebook',
       action        : 'APPloginWithFacebookAccessToken',
       responseType  : 'json'
+    },
+    'post /auth/facebook/app-login-code': {
+      controller    : 'passportFacebook',
+      action        : 'loginWithCode',
+      responseType  : 'json'
     }
   });
 

@@ -59,7 +59,19 @@ Default callback url:
 }
 ```
 
-#### Authenticate with user short lived access_token:
+#### Authenticate with fb code from client side Oauth2:
+
+Usefull for apps:
+
+```
+'post /auth/facebook/app-login-code': {
+  controller    : 'passportFacebook',
+  action        : 'loginWithCode',
+  responseType  : 'json'
+}
+```
+
+#### Authenticate with user short lived access_token (fb_exchange_token):
 
 Usefull for apps:
 
