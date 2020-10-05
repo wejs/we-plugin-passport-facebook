@@ -77,6 +77,9 @@ module.exports = {
 
       function (done) {
         if (!FBRTResult || !FBRTResult.access_token) {
+          we.log.error('Error on fBGetRefreshToken error', {
+            FBRTResult,
+          });
           return done('FBRTResult.access_token is required');
         }
 
